@@ -5,7 +5,7 @@ end
 class Phrase
   
   attr_reader :word_count
-  
+
   def initialize(phrase)
     @context = :outside_word
     @word_count = Hash.new(0)
@@ -32,12 +32,11 @@ class Phrase
   end
 
   def count_current_word
-    if exiting_word?
-      if unbound_quote?
-        @current_word.chomp!("'")
-      end
+    if (@context == :outside_word || @context == :end_of_phrase) && @current_word != nil
+      # XXX broken for some possessive words
+      @current_word.chomp!("'")
       @word_count[@current_word] += 1
-      reset_word
+      @current_word = nil
     end    
   end
 
@@ -49,27 +48,12 @@ class Phrase
     end
   end
 
-  def reset_word
-    @current_word = nil
-  end
-
-  def exiting_word?
-    (@context == :outside_word || @context == :end_of_phrase) && @current_word != nil
-  end
-
-  def in_word?
-    @context == :inside_word
-  end
-
-  def unbound_quote?
-    @current_word[-1].eql?("'")
-  end
-
   def word_char?(char)
     case char
     when /\w/
         true
     when "'"
+        # XXX broken for some possessive words
         @context == :inside_word
     else
         false
