@@ -59,15 +59,13 @@ end
 
 class Prime
 
-  SIEVE = Sieve.new(1000)
-
-  def self.nth(n)
+  def self.nth(n, sieve=Sieve.new(1000))
     raise ArgumentError.new("must be positive") if n <= 0
-    nth_prime = SIEVE.primes[n-1]
+    nth_prime = sieve.primes[n-1]
     loop do
       break if nth_prime
-      SIEVE.extend
-      nth_prime = SIEVE.primes[n-1]
+      sieve.extend
+      nth_prime = sieve.primes[n-1]
     end
     return nth_prime
   end
