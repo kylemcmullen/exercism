@@ -5,39 +5,41 @@ end
 class Phrase
   
   attr_reader :word_count
+  
   def initialize(phrase)
-  	@context = :outside_word
-  	@word_count = Hash.new(0)
+    @context = :outside_word
+    @word_count = Hash.new(0)
     phrase.downcase.chars.each do |char|
       if word_char?(char)
-        @context = :inside_word #flip to inside word if we were outside
+        @context = :inside_word
         append_to_word(char)
       else
         @context = :outside_word
-        if exiting_word?
-          if unbound_quote?
-            @current_word.chomp!("'")
-          end
-          @word_count[@current_word] += 1
-          reset_word
-        end
-      end      
+        count_current_word
+      end
     end
 
-    # end of string is outside the word...
-    @context = :outside_word 
+    end_phrase
+
+    @word_count.freeze
+  end
+
+  private
+
+  def end_phrase
+    @context = :end_of_phrase
+    count_current_word
+  end
+
+  def count_current_word
     if exiting_word?
       if unbound_quote?
         @current_word.chomp!("'")
       end
       @word_count[@current_word] += 1
       reset_word
-    end
-
-    @word_count.freeze
+    end    
   end
-
-  private
 
   def append_to_word(char)
     if @current_word.nil?
@@ -52,7 +54,7 @@ class Phrase
   end
 
   def exiting_word?
-    @context == :outside_word && @current_word != nil
+    (@context == :outside_word || @context == :end_of_phrase) && @current_word != nil
   end
 
   def in_word?
@@ -66,11 +68,11 @@ class Phrase
   def word_char?(char)
     case char
     when /\w/
-    	true
+        true
     when "'"
-    	@context == :inside_word
+        @context == :inside_word
     else
-    	false
+        false
     end
   end
 end
