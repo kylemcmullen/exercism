@@ -5,16 +5,15 @@ class SumOfMultiples
   end
 
   def to(n)
-    (0...n).select(&method(:is_multiple?)).inject(:+)
+    (0...n).select(&method(:multiple?)).inject(:+)
   end
 
   private
 
-  def is_multiple?(i)
-    @numbers.each do |number|
-      return true if i % number == 0
+  def multiple?(i)
+    @numbers.any? do |number|
+      i % number == 0
     end
-    return false
   end
 
 end
