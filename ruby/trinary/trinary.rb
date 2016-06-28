@@ -9,16 +9,14 @@ class Trinary
       case digit
       when '0'
         # no-op
-        power *= 3
       when '1'
         @value += power
-        power *= 3  
       when '2'
         @value += power + power
-        power *= 3  
       else
         raise ArgumentError.new("saw a \"#{digit}\"")
       end
+      power *= 3
     end
   rescue ArgumentError => e
     @value = 0
