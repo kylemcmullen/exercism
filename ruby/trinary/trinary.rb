@@ -4,21 +4,23 @@ class Trinary
     @value = 0
 
     power = 1
-    for index in string.length.downto(0)
+    for index in (string.length - 1).downto(0)
       digit = string[index]
       case digit
       when '0'
         # no-op
+        power *= 3
       when '1'
-        memo += power
+        @value += power
+        power *= 3  
       when '2'
-        memo += power + power
+        @value += power + power
+        power *= 3  
       else
-        raise ArgumentError
+        raise ArgumentError.new("saw a \"#{digit}\"")
       end
-      power *= 3      
     end
-  rescue ArgumentError
+  rescue ArgumentError => e
     @value = 0
   end
 
