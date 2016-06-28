@@ -1,0 +1,15 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    benchmark-ips (2.6.1)
+    randexp (0.1.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  benchmark-ips
+  randexp
+
+BUNDLED WITH
+   1.12.5
